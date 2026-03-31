@@ -38,10 +38,10 @@ const BRANDS: Brand[][] = [
   [
     { name: 'OpenAI',    slug: 'openai',    color: '412991', abbr: 'OAI'  },
     { name: 'Anthropic', slug: 'anthropic', color: 'C96442', abbr: 'ANT'  },
-    { name: 'Google',    slug: 'google',    color: '4285F4', abbr: 'G'    },
+    { name: 'Gemini',    slug: 'googlegemini', color: '8E75B2', abbr: 'GEM'  },
     { name: 'Meta',      slug: 'meta',      color: '0467DF', abbr: 'META' },
     { name: 'Mistral',   slug: 'mistral',   color: 'FF7000', abbr: 'MIS'  },
-    { name: 'DeepSeek',  slug: null,         color: '4D6BFE', abbr: 'DS'   },
+    { name: 'DeepSeek',  slug: 'deepseek',   color: '4D6BFE', abbr: 'DS'   },
   ],
   // Ring 1 — GPU / silicon
   [
@@ -59,7 +59,7 @@ const BRANDS: Brand[][] = [
     { name: 'GCP',         slug: 'googlecloud',       color: '4285F4', abbr: 'GCP' },
     { name: 'Hugging Face',slug: 'huggingface',       color: 'FF9D00', abbr: 'HF'  },
     { name: 'Microsoft',   slug: 'microsoft',          color: '5E5E5E', abbr: 'MS'  },
-    { name: 'Cohere',      slug: null,                  color: '39594D', abbr: 'COH' },
+    { name: 'Cohere',      slug: 'cohere',              color: '39594D', abbr: 'COH' },
   ],
 ];
 
