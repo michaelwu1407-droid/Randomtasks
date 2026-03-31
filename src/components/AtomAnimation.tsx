@@ -5,25 +5,25 @@ import type React from 'react';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const RING_RADIUS = 175;
+const RING_RADIUS = 220;
 const CARDS_PER_RING = 6;
-const CARD_SIZE = 42;
-const CONTAINER = 520;
+const CARD_SIZE = 44;
+const CONTAINER = 620;
 
 interface RingConfig {
   tiltX: number; // degrees — tilt from horizontal
-  tiltY: number; // degrees — fan around vertical axis
+  tiltY: number; // degrees — rotation around vertical axis
   speed: number; // radians / second
 }
 
-// Classic atom: all rings steeply tilted, evenly fanned 36° apart around
-// the vertical axis — each one forms a narrow ellipse through the nucleus.
+// Real atom feel: rings at genuinely different angles so they fan out in
+// all directions — some nearly horizontal, some diagonal, some steep.
 const RINGS: RingConfig[] = [
-  { tiltX: 78, tiltY: 0,   speed: 0.40 },
-  { tiltX: 78, tiltY: 36,  speed: 0.46 },
-  { tiltX: 78, tiltY: 72,  speed: 0.36 },
-  { tiltX: 78, tiltY: 108, speed: 0.50 },
-  { tiltX: 78, tiltY: 144, speed: 0.42 },
+  { tiltX: 20,  tiltY: 90,  speed: 0.42 },   // nearly horizontal
+  { tiltX: 55,  tiltY: 0,   speed: 0.38 },   // moderate tilt forward
+  { tiltX: 55,  tiltY: 120, speed: 0.48 },   // moderate tilt, rotated
+  { tiltX: 80,  tiltY: 50,  speed: 0.35 },   // steep, angled
+  { tiltX: 80,  tiltY: 155, speed: 0.45 },   // steep, opposite side
 ];
 
 const RING_COLOR = 'rgba(99, 130, 220, 0.28)';
