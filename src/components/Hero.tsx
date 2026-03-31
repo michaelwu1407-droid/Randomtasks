@@ -55,32 +55,38 @@ export default function Hero() {
   return (
     <div className="min-h-screen bg-[#fafafa] relative overflow-hidden">
 
-      {/* ── Background decorative orbs ── */}
+      {/* ── Background: orbs + particle field ── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-        <div
-          className="absolute"
-          style={{
-            width: 700,
-            height: 700,
-            top: -280,
-            right: -120,
-            background:
-              'radial-gradient(circle, rgba(59,130,246,0.07) 0%, rgba(99,102,241,0.04) 50%, transparent 72%)',
-            borderRadius: '50%',
-          }}
-        />
-        <div
-          className="absolute"
-          style={{
-            width: 450,
-            height: 450,
-            bottom: -100,
-            left: '25%',
-            background:
-              'radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 65%)',
-            borderRadius: '50%',
-          }}
-        />
+        {/* Soft orbs */}
+        <div className="absolute" style={{ width: 800, height: 800, top: -320, right: -150, background: 'radial-gradient(circle, rgba(99,120,255,0.07) 0%, rgba(59,130,246,0.03) 50%, transparent 72%)', borderRadius: '50%' }} />
+        <div className="absolute" style={{ width: 500, height: 500, bottom: -100, left: '20%', background: 'radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 65%)', borderRadius: '50%' }} />
+        {/* Floating particle dots */}
+        {[
+          { size: 3, top: '12%', left: '8%',  dur: '18s', delay: '0s'   },
+          { size: 2, top: '28%', left: '15%', dur: '24s', delay: '-6s'  },
+          { size: 4, top: '65%', left: '5%',  dur: '20s', delay: '-3s'  },
+          { size: 2, top: '80%', left: '22%', dur: '22s', delay: '-9s'  },
+          { size: 3, top: '18%', left: '38%', dur: '26s', delay: '-4s'  },
+          { size: 2, top: '75%', left: '42%', dur: '19s', delay: '-12s' },
+          { size: 4, top: '40%', left: '92%', dur: '21s', delay: '-2s'  },
+          { size: 3, top: '10%', left: '82%', dur: '25s', delay: '-7s'  },
+          { size: 2, top: '88%', left: '75%', dur: '17s', delay: '-15s' },
+          { size: 3, top: '55%', left: '88%', dur: '23s', delay: '-5s'  },
+        ].map((p, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              width: p.size,
+              height: p.size,
+              top: p.top,
+              left: p.left,
+              background: 'rgba(99,120,255,0.35)',
+              animation: `floatParticle ${p.dur} ease-in-out infinite`,
+              animationDelay: p.delay,
+            }}
+          />
+        ))}
       </div>
 
       {/* ── Navbar ── */}

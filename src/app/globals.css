@@ -39,3 +39,10 @@ body {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
+
+@keyframes floatParticle {
+  0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.35; }
+  25%       { transform: translateY(-18px) translateX(6px);  opacity: 0.6;  }
+  50%       { transform: translateY(-8px)  translateX(-4px); opacity: 0.25; }
+  75%       { transform: translateY(-24px) translateX(3px);  opacity: 0.5;  }
+}
