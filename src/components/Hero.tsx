@@ -140,7 +140,7 @@ export default function Hero() {
 
       {/* ── Hero ── */}
       <div className="max-w-7xl mx-auto px-8 flex items-center min-h-screen pt-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[52%_48%] gap-8 items-center w-full py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[48%_52%] gap-6 items-center w-full py-16">
 
           {/* ─ Left column ─ */}
           <div className="flex flex-col gap-6">
