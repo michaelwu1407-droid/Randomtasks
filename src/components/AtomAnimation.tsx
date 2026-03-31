@@ -20,9 +20,9 @@ interface RingConfig {
 
 // 3 rings like the reference: one wide horizontal, two steep at ~120° apart
 const RINGS: RingConfig[] = [
-  { tiltX: 22, tiltY: 0,   speed: 0.38 },  // wide horizontal ellipse
-  { tiltX: 70, tiltY: -25, speed: 0.33 },  // steep, tilted left
-  { tiltX: 70, tiltY: 105, speed: 0.44 },  // steep, tilted right
+  { tiltX: 22, tiltY: 0,   speed: 0.68 },  // wide horizontal ellipse
+  { tiltX: 70, tiltY: -25, speed: 0.60 },  // steep, tilted left
+  { tiltX: 70, tiltY: 105, speed: 0.80 },  // steep, tilted right
 ];
 
 // ─── Models (18 total) ──────────────────────────────────────────────────────
@@ -166,9 +166,9 @@ export default function AtomAnimation() {
           const { x, y, z } = project3D(theta, curRadius, ring.tiltX, ring.tiltY);
           const nz = curRadius > 0 ? z / curRadius : 0;
 
-          // Depth-based scale + opacity
-          const scale = (0.55 + (nz + 1) * 0.225) * (0.4 + ease * 0.6);
-          const alpha = (0.35 + (nz + 1) * 0.325) * ease;
+          // Depth-based scale + opacity — wider range for stronger 3D feel
+          const scale = (0.38 + (nz + 1) * 0.31) * (0.4 + ease * 0.6);
+          const alpha = (0.18 + (nz + 1) * 0.41) * ease;
           // z-index: behind cards 20–95, in-front cards 120–200
           const zIdx = nz < 0
             ? Math.round(20 + (nz + 1) * 75)
@@ -191,8 +191,8 @@ export default function AtomAnimation() {
             const tp = project3D(trailTheta, curRadius, ring.tiltX, ring.tiltY);
             const tnz = curRadius > 0 ? tp.z / curRadius : 0;
             const falloff = 1 - (ti + 1) / (TRAIL_COUNT + 1);
-            const tAlpha = (0.25 + (tnz + 1) * 0.15) * falloff * trailFade;
-            const tScale = (0.4 + (tnz + 1) * 0.15) * falloff;
+            const tAlpha = (0.55 + (tnz + 1) * 0.2) * falloff * trailFade;
+            const tScale = (0.55 + (tnz + 1) * 0.2) * falloff;
             const tZIdx = (tnz < 0
               ? Math.round(20 + (tnz + 1) * 75)
               : Math.round(120 + tnz * 80)) - 1;
@@ -243,10 +243,16 @@ export default function AtomAnimation() {
   const hc = CONTAINER / 2;
   const vb = `-${hc} -${hc} ${CONTAINER} ${CONTAINER}`;
 
-  const ringStrokeFilter = (
-    <filter id="tube" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="1" stdDeviation="1.2" floodColor="rgba(0,0,0,0.18)" />
-    </filter>
+  const ringDefs = (
+    <defs>
+      <filter id="ring-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
   );
 
   return (
@@ -260,13 +266,13 @@ export default function AtomAnimation() {
         className="relative w-full h-full"
         style={{ transform: 'perspective(900px)' }}
       >
-        {/* Ambient glow */}
+        {/* Ambient glow — stronger on light bg */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             zIndex: 0,
             background:
-              'radial-gradient(circle at 50% 50%, rgba(59,130,246,0.06) 0%, transparent 60%)',
+              'radial-gradient(ellipse at 50% 50%, rgba(99,120,255,0.10) 0%, rgba(59,100,246,0.04) 50%, transparent 72%)',
           }}
         />
 
@@ -278,25 +284,13 @@ export default function AtomAnimation() {
           width={CONTAINER}
           height={CONTAINER}
         >
-          <defs>{ringStrokeFilter}</defs>
+          {ringDefs}
           {RINGS.map((_, ri) => (
             <g key={`back-${ri}`}>
-              <path
-                d={RING_HALVES[ri].back}
-                fill="none"
-                stroke="#b0b0b0"
-                strokeWidth="3"
-                strokeLinecap="round"
-                filter="url(#tube)"
-              />
-              {/* Highlight pass for tube effect */}
-              <path
-                d={RING_HALVES[ri].back}
-                fill="none"
-                stroke="rgba(255,255,255,0.35)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
+              {/* Glow bloom */}
+              <path d={RING_HALVES[ri].back} fill="none" stroke="rgba(99,120,255,0.35)" strokeWidth="6" strokeLinecap="round" filter="url(#ring-glow)" />
+              {/* Core stroke */}
+              <path d={RING_HALVES[ri].back} fill="none" stroke="rgba(120,140,255,0.55)" strokeWidth="2" strokeLinecap="round" />
             </g>
           ))}
         </svg>
@@ -316,12 +310,13 @@ export default function AtomAnimation() {
                 style={{
                   top: '50%',
                   left: '50%',
-                  width: 14,
-                  height: 14,
-                  marginTop: -7,
-                  marginLeft: -7,
+                  width: 22,
+                  height: 22,
+                  marginTop: -11,
+                  marginLeft: -11,
                   background:
-                    'radial-gradient(circle, rgba(59,130,246,0.6) 0%, rgba(59,130,246,0.15) 60%, transparent 100%)',
+                    'radial-gradient(circle, rgba(110,140,255,0.85) 0%, rgba(79,110,255,0.40) 45%, transparent 100%)',
+                  filter: 'blur(4px)',
                   willChange: 'transform, opacity',
                   opacity: 0,
                 }}
@@ -350,18 +345,30 @@ export default function AtomAnimation() {
               }}
             >
               <div
-                className="w-full h-full rounded-lg flex flex-col items-center justify-center
-                           bg-white border border-gray-200/80
-                           shadow-[0_2px_10px_rgba(0,0,0,0.08)]
+                className="w-full h-full rounded-xl flex flex-col items-center justify-center
                            transition-transform duration-150
-                           group-hover:scale-[1.35]
-                           group-hover:shadow-[0_6px_24px_rgba(59,130,246,0.25)]
-                           group-hover:border-blue-300"
+                           group-hover:scale-[1.35]"
+                style={{
+                  background: 'rgba(255,255,255,0.68)',
+                  backdropFilter: 'blur(14px)',
+                  WebkitBackdropFilter: 'blur(14px)',
+                  border: '1px solid rgba(110,130,255,0.22)',
+                  boxShadow: '0 2px 14px rgba(79,100,255,0.10), inset 0 1px 0 rgba(255,255,255,0.90)',
+                  transition: 'box-shadow 0.15s ease, border-color 0.15s ease, transform 0.15s ease',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(79,100,255,0.22), inset 0 1px 0 rgba(255,255,255,0.9)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(110,130,255,0.55)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 14px rgba(79,100,255,0.10), inset 0 1px 0 rgba(255,255,255,0.90)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(110,130,255,0.22)';
+                }}
               >
-                <span className="text-[11px] font-bold text-gray-800 leading-none tracking-tight">
+                <span className="text-[11px] font-bold text-slate-700 leading-none tracking-tight">
                   {model.abbr}
                 </span>
-                <span className="text-[7px] text-gray-400 mt-0.5 leading-none font-medium">
+                <span className="text-[7px] text-slate-400 mt-0.5 leading-none font-medium">
                   {model.name}
                 </span>
               </div>
@@ -435,24 +442,11 @@ export default function AtomAnimation() {
           width={CONTAINER}
           height={CONTAINER}
         >
-          <defs>{ringStrokeFilter}</defs>
+          {ringDefs}
           {RINGS.map((_, ri) => (
             <g key={`front-${ri}`}>
-              <path
-                d={RING_HALVES[ri].front}
-                fill="none"
-                stroke="#b0b0b0"
-                strokeWidth="3"
-                strokeLinecap="round"
-                filter="url(#tube)"
-              />
-              <path
-                d={RING_HALVES[ri].front}
-                fill="none"
-                stroke="rgba(255,255,255,0.35)"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
+              <path d={RING_HALVES[ri].front} fill="none" stroke="rgba(99,120,255,0.35)" strokeWidth="6" strokeLinecap="round" filter="url(#ring-glow)" />
+              <path d={RING_HALVES[ri].front} fill="none" stroke="rgba(120,140,255,0.65)" strokeWidth="2" strokeLinecap="round" />
             </g>
           ))}
         </svg>
